@@ -9,11 +9,10 @@ __pycache__/
 # Jupyter
 #.ipynb_checkpoints/
 
-# 대용량 산출물
-#models/*.keras
-#models/*.pt
-#wandb/
-#data_synthetic/
-#Data/
-#backgrounds/
-#outputs/
+# 대용량 산출물 (로컬에는 유지, 저장소에는 미포함)
+wandb/
+data_synthetic/
+Data/
+backgrounds/
+outputs/
+old/

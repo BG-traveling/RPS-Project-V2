@@ -5,6 +5,10 @@ MobileNetV2(ImageNet) 전이학습 사용. 상세 배경은 [작업계획서.md]
 
 ## 프로젝트 구조
 
+> `Data/`, `backgrounds/`, `data_synthetic/`, `outputs/`, `wandb/`, `old/`는 대용량/생성물이라
+> `.gitignore` 처리되어 저장소에는 포함되지 않는다. 원본 데이터는 아래 "데이터 출처" 참고,
+> 나머지는 `scripts/` 파이프라인을 순서대로 돌리면 로컬에 재생성된다.
+
 ```
 Data/{rock,paper,scissors}/     원본 데이터셋 (Kaggle rps-cv-images, 2,188장, 초록 배경)
 backgrounds/                    Unsplash 배경 50장 (크로마키 합성용)
@@ -117,7 +121,9 @@ confusion matrix). 모델 정의는 `src/rps_model.py` 하나에 있고, 학습�
 | PyTorch+GPU 전환 직후 | 0.455 → **0.675** | 체크포인트 기준 버그 발견·수정 |
 | paper 쏠림 수정 + 데이터 보강 | **0.934** | 블러 증강, ROI 정합, 확률 바 UI |
 | 각도 특화 촬영(옆면 주먹 등) | **0.945** | 취약 각도 타겟 촬영 900장 |
-| B안(손 검출 크롭) 도입 | **0.977** | 배경 제거 + 다중 손 대상 추적 |
+| B안(손 검출 크롭) 도입 | **0.977**† | 배경 제거 + 다중 손 대상 추적 |
+
+† B안 도입 직후 측정값. 최종 모델 기준 재측정 수치는 아래 "최종 성능" 참고.
 
 ### 사건 1 — "test 93.6%인데 실전에서 형편없다" (Keras, 배경 합성 직후)
 
@@ -193,11 +199,20 @@ scissors 인정률이 64%에 그쳤다. 손가락별 각도 분포를 직접 뽑
 새로 스폰하며 Windows에서 spawn이 교착한 것 — 즉석 학습 경로만 `num_workers=0`으로
 바꿔 해결.
 
+## 최종 성능 (현재 모델 기준)
+
+`outputs/evaluation_webcam_ft.txt` 재측정 기준, `models/rps_mobilenetv2.pt` 하나로 고정:
+
+| 평가셋 | Accuracy |
+|---|---|
+| **webcam_val** (직접 촬영, 실전 지표) | **97.15%** |
+| test_original (Kaggle 원본, 초록 배경) | 96.05% |
+| test_synthetic (배경 합성) | 98.78% |
+
 ## 남은 일 / 다음 개선 방향
 
 - [ ] scissors↔paper 잔여 혼동 보강 — 손끝이 카메라를 향한 각도 위주로 추가 촬영,
   또는 관절각도 게이트를 CNN과 앙상블
-- [ ] `requirements.txt`에 남아있는 tensorflow/keras(미사용 잔재) venv에서 정리
 - [ ] Unsplash 배경 나머지 50장 보강(선택, API 시간당 요청 제한)
 
 ## 데이터 출처
