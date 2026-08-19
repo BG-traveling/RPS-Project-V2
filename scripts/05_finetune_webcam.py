@@ -50,29 +50,43 @@ def list_syn(split_dir):
     return items
 
 
-def decode(path, label):
+def decode(path, label, crop_square):
+    """crop_square=True 면 중앙 정사각 크롭(비율 보존) 후 리사이즈.
+
+    세로 영상 프레임(360×640)을 그대로 224×224 로 뭉개면 세로가 1.8배 눌려
+    손가락 형태가 붕괴됨 → 웹캠 프레임은 중앙 360×360 크롭으로 왜곡 제거 +
+    손 비중 확대. 합성 이미지(300×200)는 기존 규격(왜곡 리사이즈) 유지.
+    """
     img = tf.io.read_file(path)
     img = tf.io.decode_image(img, channels=3, expand_animations=False)
+    if crop_square:
+        shape = tf.shape(img)
+        h, w = shape[0], shape[1]
+        size = tf.minimum(h, w)
+        img = tf.image.crop_to_bounding_box(
+            img, (h - size) // 2, (w - size) // 2, size, size
+        )
     img = tf.image.resize(img, (IMG_SIZE, IMG_SIZE))
     img = img / 255.0
     return img, label
 
 
-def make_ds(items, shuffle=False):
+def make_ds(items, shuffle=False, crop_square=False):
     paths = [p for p, _ in items]
     labels = [l for _, l in items]
     ds = tf.data.Dataset.from_tensor_slices((paths, labels))
     if shuffle:
         ds = ds.shuffle(len(paths), seed=SEED, reshuffle_each_iteration=True)
-    ds = ds.map(decode, num_parallel_calls=tf.data.AUTOTUNE)
+    ds = ds.map(lambda p, l: decode(p, l, crop_square),
+                num_parallel_calls=tf.data.AUTOTUNE)
     ds = ds.batch(BATCH).prefetch(tf.data.AUTOTUNE)
     return ds, np.array(labels)
 
 
-def evaluate_set(model, name, items, report_lines):
+def evaluate_set(model, name, items, report_lines, crop_square=False):
     from sklearn.metrics import classification_report, confusion_matrix
 
-    ds, y_true = make_ds(items)
+    ds, y_true = make_ds(items, crop_square=crop_square)
     probs = model.predict(ds, verbose=0)
     y_pred = probs.argmax(axis=1)
     acc = float((y_pred == y_true).mean())
@@ -88,11 +102,27 @@ def main():
     tf.keras.utils.set_random_seed(SEED)
     wc_train, wc_val = webcam_split()
 
-    train_items = list_syn(SYN / "train") + wc_train * WEBCAM_REPEAT
-    print(f"train 총 {len(train_items)}장 (합성 {len(list_syn(SYN / 'train'))} + 웹캠 {len(wc_train)}×{WEBCAM_REPEAT})")
+    # 합성(왜곡 리사이즈)과 웹캠(정사각 크롭)은 전처리가 달라 각각 디코딩 후 결합
+    syn_items = list_syn(SYN / "train")
+    wc_items = wc_train * WEBCAM_REPEAT
+    print(f"train 총 {len(syn_items) + len(wc_items)}장 (합성 {len(syn_items)} + 웹캠 {len(wc_train)}×{WEBCAM_REPEAT})")
 
-    train_ds, _ = make_ds(train_items, shuffle=True)
-    val_ds, _ = make_ds(wc_val)  # 실전 지표인 웹캠 검증셋으로 조기종료 판단
+    def raw_ds(items, crop_square):
+        ds = tf.data.Dataset.from_tensor_slices(
+            ([p for p, _ in items], [l for _, l in items])
+        )
+        return ds.map(lambda p, l: decode(p, l, crop_square),
+                      num_parallel_calls=tf.data.AUTOTUNE)
+
+    train_ds = (
+        raw_ds(syn_items, False)
+        .concatenate(raw_ds(wc_items, True))
+        .shuffle(len(syn_items) + len(wc_items), seed=SEED,
+                 reshuffle_each_iteration=True)
+        .batch(BATCH)
+        .prefetch(tf.data.AUTOTUNE)
+    )
+    val_ds, _ = make_ds(wc_val, crop_square=True)  # 실전 지표로 조기종료 판단
 
     shutil.copy2(MODEL_PATH, BACKUP_PATH)  # 이전 모델 백업
     model = keras.models.load_model(MODEL_PATH)
@@ -113,7 +143,7 @@ def main():
     # 평가 — 디스크의 최고 성능 모델 기준
     model = keras.models.load_model(MODEL_PATH)
     report_lines = []
-    acc_wc = evaluate_set(model, "webcam_val (실전 지표)", wc_val, report_lines)
+    acc_wc = evaluate_set(model, "webcam_val (실전 지표)", wc_val, report_lines, crop_square=True)
     acc_orig = evaluate_set(model, "test_original", list_syn(SYN / "test_original"), report_lines)
     acc_syn = evaluate_set(model, "test_synthetic", list_syn(SYN / "test_synthetic"), report_lines)
     report_lines += ["\n===== 요약 =====",
