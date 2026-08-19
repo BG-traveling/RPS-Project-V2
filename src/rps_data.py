@@ -17,6 +17,7 @@ from rps_model import CLASSES, IMG_SIZE
 ROOT = Path(__file__).resolve().parents[1]
 SYN = ROOT / "data_synthetic"
 WEBCAM_DIR = ROOT / "Data" / "webcam"
+CROPPED_DIR = ROOT / "Data" / "webcam_cropped"  # 08_crop_hands.py 산출물
 TRAIN_FRACTION = 0.7  # 웹캠 시간순 분할 비율
 
 _augment = transforms.Compose([
@@ -46,6 +47,9 @@ def webcam_split():
     각 세션 안에서 앞 70% → train, 뒤 30% → val 로 나눈다. 연속 프레임이
     train/val 에 섞이는 리크를 막으면서, 촬영 세션이 늘어나도 모든 세션이
     양쪽에 기여하게 한다.
+
+    08_crop_hands.py 가 만든 손 크롭본이 있으면 그것을 사용한다 (B안: 분류기
+    입력을 앱의 검출 크롭과 일치). 크롭본이 없는 파일은 원본+중앙 정사각 크롭.
     """
     train, val = [], []
     for i, c in enumerate(CLASSES):
@@ -55,10 +59,13 @@ def webcam_split():
             key = f.name.split("__")[0]  # 예: scissors_video, scissors_cap20260819_121500
             sessions.setdefault(key, []).append(f)
         for key in sorted(sessions):
-            group = sessions[key]
+            group = []
+            for f in sessions[key]:
+                cropped = CROPPED_DIR / c / f.name
+                group.append(str(cropped) if cropped.exists() else str(f))
             cut = int(len(group) * TRAIN_FRACTION)
-            train += [(str(f), i, True) for f in group[:cut]]
-            val += [(str(f), i, True) for f in group[cut:]]
+            train += [(p, i, True) for p in group[:cut]]
+            val += [(p, i, True) for p in group[cut:]]
     return train, val
 
 

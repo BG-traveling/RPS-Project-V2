@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "C:\kdh\개인\rps-project-sample\scripts\04_train_model.py", line 78, in <module>
+    main()
+    ~~~~^^
+  File "C:\kdh\개인\rps-project-sample\scripts\04_train_model.py", line 54, in main
+    fit(model, train_loader, val_loader, device,
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        epochs=CONFIG["epochs"], lr=CONFIG["lr"], model_path=MODEL_PATH,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        wandb_run=run, patience=CONFIG["patience"])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\kdh\개인\rps-project-sample\src\rps_train.py", line 55, in fit
+    tr_loss, tr_acc = run_epoch(model, train_loader, device, optimizer)
+                      ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\kdh\개인\rps-project-sample\src\rps_train.py", line 30, in run_epoch
+    total_loss += loss.item() * len(y)
+                  ~~~~~~~~~^^
+KeyboardInterrupt

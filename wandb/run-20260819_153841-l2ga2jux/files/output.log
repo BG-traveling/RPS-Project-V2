@@ -1,0 +1,11 @@
+train 총 20027장 (합성 3062 + 웹캠 3393×5)
+학습 전 webcam_val: loss 0.1736 / acc 0.9397
+epoch  1/15  train 0.0823/0.9753  val 0.0865/0.9746
+epoch  2/15  train 0.0513/0.9835  val 0.1384/0.9582
+epoch  3/15  train 0.0437/0.9854  val 0.0972/0.9678
+epoch  4/15  train 0.0373/0.9880  val 0.1169/0.9630
+epoch  5/15  train 0.0342/0.9889  val 0.2809/0.9335
+조기종료 (patience=4)
+webcam_val accuracy: 0.9746
+test_original accuracy: 0.9818
+test_synthetic accuracy: 0.9726
