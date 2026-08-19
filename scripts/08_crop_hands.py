@@ -58,11 +58,11 @@ def main():
             if img is None:
                 continue
             rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-            boxes = det.detect(rgb)
-            if boxes:
+            hands = det.detect(rgb)
+            if hands:
                 h, w = img.shape[:2]
-                box = max(boxes, key=lambda b: (b[2] - b[0]) * (b[3] - b[1]))
-                x1, y1, x2, y2 = expand_square(box, w, h)
+                target = max(hands, key=lambda hd: (hd.box[2] - hd.box[0]) * (hd.box[3] - hd.box[1]))
+                x1, y1, x2, y2 = expand_square(target.box, w, h)
                 crop = img[y1:y2, x1:x2]
                 n_det += 1
             else:
@@ -70,7 +70,7 @@ def main():
                 n_fb += 1
             imwrite_u(out, crop)
             if len(samples) < 24 and (n_det + n_fb) % 97 == 1:
-                samples.append((out, c, bool(boxes)))
+                samples.append((out, c, bool(hands)))
         stats[c] = (n_det, n_fb, n_skip)
         print(f"{c}: 검출 크롭 {n_det} / 폴백 {n_fb} / 건너뜀(기존) {n_skip}")
 

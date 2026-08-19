@@ -16,13 +16,20 @@ scripts/
   03_background_synthesis.py    HSV 크로마키 마스킹 + 모폴로지 + 소프트 블렌딩 합성
   04_train_model.py             MobileNetV2 전이학습 + 평가 (PyTorch + wandb)
   05_finetune_webcam.py         실전 웹캠 데이터 fine-tuning (PyTorch + wandb)
+  06_capture_webcam.py          웹캠으로 학습 데이터 직접 촬영 (배치 촬영)
+  07_clean_webcam_data.py       손 없는 프레임 자동 격리 (피부색 비율 기반)
+  08_crop_hands.py              손 검출 크롭으로 학습 데이터 재생성 (B안)
   diag_webcam.py                진단 도구 (train/val 분리 평가, 타임라인, 몽타주)
+  diag_geometric_gate.py        관절각도 게이트(classify_geometric) 정확도 검증
 src/
   rps_model.py                  공용 모델 정의 (정규화 내장, 동결/unfreeze 제어)
   rps_data.py                   공용 데이터셋 (도메인별 전처리, 시간순 분할)
   rps_train.py                  공용 학습 루프 (조기종료, best 체크포인트, wandb 로깅)
-  webcam_app.py                 실시간 웹캠 추론 (ROI, 스무딩 N=7, 임계값 0.75, 쿨다운 2s)
+  hand_detector.py              MediaPipe 손 검출 + 대상 손 추적 + 관절각도 게이트
+  webcam_app.py                 실시간 웹캠 추론 (검출 기반 동적 박스, 미학습 모양 거부,
+                                 즉석 보정학습)
 models/rps_mobilenetv2.pt       학습된 모델 (학습↔추론은 이 파일로만 연결)
+models/hand_landmarker.task     MediaPipe 손 검출 사전학습 모델
 outputs/                        EDA/합성/학습 그래프, confusion matrix, 평가 리포트
 ```
 
@@ -43,9 +50,26 @@ python -m venv .venv
 .venv\Scripts\python scripts\04_train_model.py        # 합성 데이터 1차 학습
 .venv\Scripts\python scripts\05_finetune_webcam.py    # 실전 웹캠 데이터 fine-tuning
 
-# 4) 실시간 웹캠 앱 (q 로 종료)
+# 4) 실시간 웹캠 앱
 .venv\Scripts\python src\webcam_app.py
 ```
+
+**웹캠 앱 조작키**
+
+| 키 | 동작 |
+|---|---|
+| `1`/`2`/`3` (또는 `r`/`p`/`s`) | 화면이 잘못 인식됐을 때 정답을 눌러 그 프레임을 학습 데이터로 저장 (즉석 보정) |
+| `T` | 지금까지 모은 보정 데이터로 즉석 미세조정 (카메라 일시정지 1~2분, 완료 후 자동 반영·재시작 불필요). 최소 6장 필요 |
+| `Q` | 종료 |
+
+- **미학습 손모양 거부**: MediaPipe 관절 좌표로 "펴진 손가락 패턴"을 직접 계산해
+  rock(0개)/scissors(검지만)/paper(4개) 중 어디에도 안 맞으면 5프레임 연속 확인 후
+  CNN 결과 대신 `UNKNOWN GESTURE`를 표시한다 (`src/hand_detector.py:classify_geometric`).
+  각도 기반이라 손 방향이 달라져도 픽셀 분류보다 안정적이다.
+- **즉석 보정학습**: `T`는 `05_finetune_webcam.py`와 동일한 안전장치(정확도 기준
+  체크포인트, 이전 가중치 자동 백업, 퇴행 시 미저장)로 웹캠 데이터만 짧게(기본 3 epoch)
+  이어서 학습한다. 합성 데이터를 포함한 정식 재학습을 대체하지 않으며, 저장된 보정
+  프레임은 다음에 `05_finetune_webcam.py`를 정식으로 돌릴 때도 자동으로 포함된다.
 
 프레임워크: **PyTorch** (torchvision MobileNetV2). 학습 지표는 wandb `rps-project`
 프로젝트에 epoch 단위로 로깅된다 (train/val loss·accuracy, 최종 confusion matrix).
