@@ -79,7 +79,7 @@ def evaluate_set(model, name, items, report_lines):
     cm = confusion_matrix(y_true, y_pred)
     rep = classification_report(y_true, y_pred, target_names=CLASSES, digits=4)
     report_lines += [f"\n===== {name} =====", f"accuracy: {acc:.4f}",
-                     f"confusion matrix (rows=true {CLASSES}):\n{cm}", rep]
+                    f"confusion matrix (rows=true {CLASSES}):\n{cm}", rep]
     print(f"{name} accuracy: {acc:.4f}")
     return acc
 
@@ -117,7 +117,7 @@ def main():
     acc_orig = evaluate_set(model, "test_original", list_syn(SYN / "test_original"), report_lines)
     acc_syn = evaluate_set(model, "test_synthetic", list_syn(SYN / "test_synthetic"), report_lines)
     report_lines += ["\n===== 요약 =====",
-                     f"webcam_val: {acc_wc:.4f} / test_original: {acc_orig:.4f} / test_synthetic: {acc_syn:.4f}"]
+                    f"webcam_val: {acc_wc:.4f} / test_original: {acc_orig:.4f} / test_synthetic: {acc_syn:.4f}"]
     (OUT / "evaluation_webcam_ft.txt").write_text("\n".join(report_lines), encoding="utf-8")
     print(f"리포트 → {OUT / 'evaluation_webcam_ft.txt'}")
     print(f"이전 모델 백업 → {BACKUP_PATH}")
