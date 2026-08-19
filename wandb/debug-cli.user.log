@@ -1,0 +1,84 @@
+2026-08-19 11:55:39 ERROR Traceback (most recent call last):
+  File "C:\kdh\개인\rps-project-sample\.venv\Lib\site-packages\wandb\cli\cli.py", line 166, in wrapper
+    return func(*args, **kwargs)
+  File "C:\kdh\개인\rps-project-sample\.venv\Lib\site-packages\wandb\cli\cli.py", line 387, in login
+    wandb.login(
+    ~~~~~~~~~~~^
+        force=True,
+        ^^^^^^^^^^^
+    ...<4 lines>...
+        referrer="models",
+        ^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\kdh\개인\rps-project-sample\.venv\Lib\site-packages\wandb\sdk\wandb_login.py", line 100, in login
+    logged_in, _ = _login(
+                   ~~~~~~^
+        key=key,
+        ^^^^^^^^
+    ...<5 lines>...
+        referrer=referrer or "models",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\kdh\개인\rps-project-sample\.venv\Lib\site-packages\wandb\sdk\wandb_login.py", line 195, in _login
+    auth = _find_or_prompt_for_key(
+        settings,
+    ...<5 lines>...
+        verify=verify,
+    )
+  File "C:\kdh\개인\rps-project-sample\.venv\Lib\site-packages\wandb\sdk\wandb_login.py", line 275, in _find_or_prompt_for_key
+    auth = wbauth.authenticate_session(
+        host=host,
+    ...<6 lines>...
+        verify=verify,
+    )
+  File "C:\kdh\개인\rps-project-sample\.venv\Lib\site-packages\wandb\sdk\lib\wbauth\authenticate.py", line 129, in authenticate_session
+    raise UsageError(
+        "No API key configured. Use `wandb login` to log in."
+    ) from None
+wandb.errors.errors.UsageError: No API key configured. Use `wandb login` to log in.
+Traceback (most recent call last):
+  File "C:\kdh\개인\rps-project-sample\.venv\Lib\site-packages\wandb\cli\cli.py", line 166, in wrapper
+    return func(*args, **kwargs)
+  File "C:\kdh\개인\rps-project-sample\.venv\Lib\site-packages\wandb\cli\cli.py", line 387, in login
+    wandb.login(
+    ~~~~~~~~~~~^
+        force=True,
+        ^^^^^^^^^^^
+    ...<4 lines>...
+        referrer="models",
+        ^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\kdh\개인\rps-project-sample\.venv\Lib\site-packages\wandb\sdk\wandb_login.py", line 100, in login
+    logged_in, _ = _login(
+                   ~~~~~~^
+        key=key,
+        ^^^^^^^^
+    ...<5 lines>...
+        referrer=referrer or "models",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\kdh\개인\rps-project-sample\.venv\Lib\site-packages\wandb\sdk\wandb_login.py", line 195, in _login
+    auth = _find_or_prompt_for_key(
+        settings,
+    ...<5 lines>...
+        verify=verify,
+    )
+  File "C:\kdh\개인\rps-project-sample\.venv\Lib\site-packages\wandb\sdk\wandb_login.py", line 275, in _find_or_prompt_for_key
+    auth = wbauth.authenticate_session(
+        host=host,
+    ...<6 lines>...
+        verify=verify,
+    )
+  File "C:\kdh\개인\rps-project-sample\.venv\Lib\site-packages\wandb\sdk\lib\wbauth\authenticate.py", line 129, in authenticate_session
+    raise UsageError(
+        "No API key configured. Use `wandb login` to log in."
+    ) from None
+wandb.errors.errors.UsageError: No API key configured. Use `wandb login` to log in.
+2026-08-19 11:58:31 INFO Reached EOF.
+2026-08-19 11:58:31 INFO Closing mailbox, abandoning 0 handles.
+2026-08-19 11:58:46 INFO Reached EOF.
+2026-08-19 11:58:46 INFO Closing mailbox, abandoning 0 handles.

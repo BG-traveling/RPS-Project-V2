@@ -1,0 +1,1 @@
+{"columns":["Actual","Predicted","nPredictions"],"data":[["rock","rock",94.0],["rock","paper",10.0],["rock","scissors",5.0],["paper","rock",0.0],["paper","paper",107.0],["paper","scissors",0.0],["scissors","rock",0.0],["scissors","paper",12.0],["scissors","scissors",101.0]]}

@@ -1,0 +1,10 @@
+{
+  "classes": [
+    "rock",
+    "paper",
+    "scissors"
+  ],
+  "img_size": 224,
+  "test_original_acc": 0.8541033434650456,
+  "test_synthetic_acc": 0.8419452887537994
+}

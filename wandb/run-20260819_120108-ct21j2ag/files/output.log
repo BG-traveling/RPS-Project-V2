@@ -1,0 +1,12 @@
+epoch  1/10  train 0.6771/0.7257  val 0.5627/0.7652
+epoch  2/10  train 0.4059/0.8570  val 0.4982/0.7835
+epoch  3/10  train 0.3572/0.8609  val 0.4638/0.8079
+epoch  4/10  train 0.3248/0.8785  val 0.4306/0.8293
+epoch  5/10  train 0.3247/0.8717  val 0.3966/0.8415
+epoch  6/10  train 0.3224/0.8759  val 0.3837/0.8445
+epoch  7/10  train 0.2951/0.8880  val 0.4068/0.8384
+epoch  8/10  train 0.3058/0.8726  val 0.3667/0.8567
+epoch  9/10  train 0.2971/0.8867  val 0.3387/0.8750
+epoch 10/10  train 0.2887/0.8834  val 0.3664/0.8445
+test_original accuracy: 0.8419
+test_synthetic accuracy: 0.8511

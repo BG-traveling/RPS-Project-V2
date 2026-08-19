@@ -1,0 +1,22 @@
+epoch  1/20  train 0.6771/0.7257  val 0.5627/0.7652
+epoch  2/20  train 0.4059/0.8570  val 0.4982/0.7835
+epoch  3/20  train 0.3572/0.8609  val 0.4638/0.8079
+epoch  4/20  train 0.3248/0.8785  val 0.4306/0.8293
+epoch  5/20  train 0.3247/0.8717  val 0.3966/0.8415
+epoch  6/20  train 0.3224/0.8759  val 0.3837/0.8445
+epoch  7/20  train 0.2951/0.8880  val 0.4068/0.8384
+epoch  8/20  train 0.3058/0.8726  val 0.3667/0.8567
+epoch  9/20  train 0.2971/0.8867  val 0.3387/0.8750
+epoch 10/20  train 0.2887/0.8834  val 0.3664/0.8445
+epoch 11/20  train 0.2864/0.8935  val 0.3528/0.8598
+epoch 12/20  train 0.2913/0.8916  val 0.3395/0.8720
+epoch 13/20  train 0.2870/0.8932  val 0.3356/0.8689
+epoch 14/20  train 0.2781/0.8981  val 0.3467/0.8750
+epoch 15/20  train 0.2600/0.9010  val 0.3465/0.8567
+epoch 16/20  train 0.2566/0.9004  val 0.3145/0.8720
+epoch 17/20  train 0.2699/0.8991  val 0.3300/0.8537
+epoch 18/20  train 0.2706/0.8926  val 0.3335/0.8689
+epoch 19/20  train 0.2606/0.8997  val 0.3228/0.8628
+epoch 20/20  train 0.2497/0.8997  val 0.3224/0.8811
+test_original accuracy: 0.8359
+test_synthetic accuracy: 0.8571

@@ -1,0 +1,26 @@
+2026-08-19 12:01:08,983 INFO    MainThread:21032 [wandb_setup.py:_flush():81] Current SDK version is 0.28.2
+2026-08-19 12:01:08,983 INFO    MainThread:21032 [wandb_setup.py:_flush():81] Configure stats pid to 21032
+2026-08-19 12:01:08,983 INFO    MainThread:21032 [wandb_setup.py:_flush():81] Loading settings from environment variables
+2026-08-19 12:01:08,984 INFO    MainThread:21032 [wandb_init.py:setup_run_log_directory():739] Logging user logs to C:\kdh\개인\rps-project-sample\wandb\run-20260819_120108-ct21j2ag\logs\debug.log
+2026-08-19 12:01:08,985 INFO    MainThread:21032 [wandb_init.py:setup_run_log_directory():740] Logging internal logs to C:\kdh\개인\rps-project-sample\wandb\run-20260819_120108-ct21j2ag\logs\debug-internal.log
+2026-08-19 12:01:08,985 INFO    MainThread:21032 [wandb_init.py:init():783] calling init triggers
+2026-08-19 12:01:08,985 INFO    MainThread:21032 [wandb_init.py:init():788] wandb.init called with sweep_config: {}
+config: {'stage': '04_base_training', 'backbone': 'mobilenet_v2 (ImageNet, frozen)', 'img_size': 224, 'batch_size': 32, 'lr': 0.001, 'epochs': 10, 'patience': 4, 'augment': 'hflip, affine(rot90, trans0.1, scale0.15), jitter(b0.2, c0.2)', '_wandb': {}}
+2026-08-19 12:01:08,985 INFO    MainThread:21032 [wandb_init.py:init():831] starting backend
+2026-08-19 12:01:08,985 INFO    MainThread:21032 [wandb_init.py:init():846] sending inform_init request
+2026-08-19 12:01:09,251 INFO    MainThread:21032 [wandb_init.py:init():851] backend started and connected
+2026-08-19 12:01:09,284 INFO    MainThread:21032 [wandb_init.py:init():921] updated telemetry
+2026-08-19 12:01:09,613 INFO    MainThread:21032 [wandb_init.py:init():944] communicating run to backend with 90.0 second timeout
+2026-08-19 12:01:10,286 INFO    MainThread:21032 [wandb_init.py:init():981] starting run threads in backend
+2026-08-19 12:01:10,369 INFO    MainThread:21032 [wandb_run.py:_console_start():2626] atexit reg
+2026-08-19 12:01:10,369 INFO    MainThread:21032 [wandb_run.py:_redirect():2476] redirect: wrap_raw
+2026-08-19 12:01:10,369 INFO    MainThread:21032 [wandb_run.py:_redirect():2545] Wrapping output streams.
+2026-08-19 12:01:10,369 INFO    MainThread:21032 [wandb_run.py:_redirect():2568] Redirects installed.
+2026-08-19 12:01:10,373 INFO    MainThread:21032 [wandb_init.py:init():1019] run started, returning control to user process
+2026-08-19 12:03:11,247 INFO    MainThread:21032 [wandb_run.py:_config_callback():1360] config_cb ('_wandb', 'visualize', 'test_original/confusion_matrix') {'panel_type': 'Vega2', 'panel_config': {'panelDefId': 'wandb/confusion_matrix/v1', 'fieldSettings': {'Actual': 'Actual', 'Predicted': 'Predicted', 'nPredictions': 'nPredictions'}, 'stringSettings': {'title': 'Confusion Matrix Curve'}, 'transform': {'name': 'tableWithLeafColNames'}, 'userQuery': {'queryFields': [{'name': 'runSets', 'args': [{'name': 'runSets', 'value': '${runSets}'}], 'fields': [{'name': 'id', 'fields': []}, {'name': 'name', 'fields': []}, {'name': '_defaultColorIndex', 'fields': []}, {'name': 'summaryTable', 'args': [{'name': 'tableKey', 'value': 'test_original/confusion_matrix_table'}], 'fields': []}]}]}}} None
+2026-08-19 12:03:23,270 INFO    MainThread:21032 [wandb_run.py:_config_callback():1360] config_cb ('_wandb', 'visualize', 'test_synthetic/confusion_matrix') {'panel_type': 'Vega2', 'panel_config': {'panelDefId': 'wandb/confusion_matrix/v1', 'fieldSettings': {'Actual': 'Actual', 'Predicted': 'Predicted', 'nPredictions': 'nPredictions'}, 'stringSettings': {'title': 'Confusion Matrix Curve'}, 'transform': {'name': 'tableWithLeafColNames'}, 'userQuery': {'queryFields': [{'name': 'runSets', 'args': [{'name': 'runSets', 'value': '${runSets}'}], 'fields': [{'name': 'id', 'fields': []}, {'name': 'name', 'fields': []}, {'name': '_defaultColorIndex', 'fields': []}, {'name': 'summaryTable', 'args': [{'name': 'tableKey', 'value': 'test_synthetic/confusion_matrix_table'}], 'fields': []}]}]}}} None
+2026-08-19 12:03:24,327 INFO    MainThread:21032 [wandb_run.py:_finish():2397] finishing run onthegroundplay403-sesac/rps-project/ct21j2ag
+2026-08-19 12:03:24,328 INFO    MainThread:21032 [wandb_run.py:_atexit_cleanup():2593] got exitcode: 0
+2026-08-19 12:03:24,328 INFO    MainThread:21032 [wandb_run.py:_restore():2575] restore
+2026-08-19 12:03:24,328 INFO    MainThread:21032 [wandb_run.py:_restore():2581] restore done
+2026-08-19 12:03:26,849 INFO    MainThread:21032 [wandb_run.py:_footer_sync_info():4025] logging synced files

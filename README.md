@@ -14,9 +14,15 @@ scripts/
   01_eda.py                     EDA — 클래스 분포, 규격/손상, RGB 채널(배경 편향) 분석
   02_split_data.py              stratified 분리 → splits/*.csv (데이터 리크 방지 기준점)
   03_background_synthesis.py    HSV 크로마키 마스킹 + 모폴로지 + 소프트 블렌딩 합성
-  04_train_model.py             MobileNetV2 전이학습 + 평가 (confusion matrix 등)
-src/webcam_app.py               실시간 웹캠 추론 (ROI, 스무딩 N=7, 임계값 0.75, 쿨다운 2s)
-models/rps_mobilenetv2.keras    학습된 모델 (학습↔추론은 이 파일로만 연결)
+  04_train_model.py             MobileNetV2 전이학습 + 평가 (PyTorch + wandb)
+  05_finetune_webcam.py         실전 웹캠 데이터 fine-tuning (PyTorch + wandb)
+  diag_webcam.py                진단 도구 (train/val 분리 평가, 타임라인, 몽타주)
+src/
+  rps_model.py                  공용 모델 정의 (정규화 내장, 동결/unfreeze 제어)
+  rps_data.py                   공용 데이터셋 (도메인별 전처리, 시간순 분할)
+  rps_train.py                  공용 학습 루프 (조기종료, best 체크포인트, wandb 로깅)
+  webcam_app.py                 실시간 웹캠 추론 (ROI, 스무딩 N=7, 임계값 0.75, 쿨다운 2s)
+models/rps_mobilenetv2.pt       학습된 모델 (학습↔추론은 이 파일로만 연결)
 outputs/                        EDA/합성/학습 그래프, confusion matrix, 평가 리포트
 ```
 
@@ -25,17 +31,27 @@ outputs/                        EDA/합성/학습 그래프, confusion matrix, �
 ```bash
 # 1) 환경
 python -m venv .venv
-.venv\Scripts\pip install tensorflow opencv-python scikit-learn matplotlib
+.venv\Scripts\pip install torch torchvision wandb opencv-python scikit-learn matplotlib pillow
 
-# 2) 파이프라인 (순서대로)
+# 2) wandb (선택 — 미로그인 시 WANDB_MODE=offline 로 로컬 기록 후 wandb sync 로 업로드)
+.venv\Scripts\wandb login
+
+# 3) 파이프라인 (순서대로)
 .venv\Scripts\python scripts\01_eda.py
 .venv\Scripts\python scripts\02_split_data.py
 .venv\Scripts\python scripts\03_background_synthesis.py
-.venv\Scripts\python scripts\04_train_model.py
+.venv\Scripts\python scripts\04_train_model.py        # 합성 데이터 1차 학습
+.venv\Scripts\python scripts\05_finetune_webcam.py    # 실전 웹캠 데이터 fine-tuning
 
-# 3) 실시간 웹캠 앱 (q 로 종료)
+# 4) 실시간 웹캠 앱 (q 로 종료)
 .venv\Scripts\python src\webcam_app.py
 ```
+
+프레임워크: **PyTorch** (torchvision MobileNetV2). 학습 지표는 wandb `rps-project`
+프로젝트에 epoch 단위로 로깅된다 (train/val loss·accuracy, 최종 confusion matrix).
+모델 정의는 `src/rps_model.py` 하나에 있고, 학습·추론 모두 이 모듈을 import 한다 —
+입력 계약(0~1 float)과 ImageNet 정규화가 모델 forward 에 내장되어 규격 불일치가
+구조적으로 불가능하다.
 
 ## 핵심 설계 결정
 
@@ -47,6 +63,27 @@ python -m venv .venv
   레이어로 MobileNetV2가 기대하는 −1~1 로 변환 → 학습/추론 규격 자동 동일.
 - **test 이중 평가**: test_original(초록 배경) vs test_synthetic(실사 배경) 정확도를 비교해
   배경 증강 효과를 정량 확인.
+
+## 학습 결과 (2026-08-19, PyTorch + GPU, 웹캠 데이터 2,564장 반영 최종)
+
+| 지표 | 값 |
+|---|---|
+| **webcam_val (실전 지표, 650장)** | **0.934** — rock 95% / paper 93% / scissors 92% |
+| test_original | 0.918 |
+| test_synthetic | 0.930 |
+| 확대+블러 스트레스 (실전 조건 시뮬레이션) | recall 91~96%, 클래스 쏠림 없음 |
+
+- 학습 곡선·confusion matrix: wandb `rps-project` 프로젝트 (04: base 학습, 05: fine-tuning)
+- 05 체크포인트는 **webcam_val 정확도 기준**으로 저장 — 분포 밖 검증에서는
+  정확도가 올라도 loss 가 높게 유지될 수 있어, loss 기준 저장이 개선을 전부
+  걸러버리는 문제를 겪은 뒤의 설계 결정.
+- 실전 "paper 쏠림" 사건: 모션 블러에서 paper 과대 예측 + 앱 ROI(360)와 학습
+  크롭(480)의 확대 불일치 + 임계값이 저확신 rock/scissors 를 WAITING 으로 가림.
+  → 블러/확대 증강 추가, 앱 ROI 를 학습 크롭과 동일한 최대 중앙 정사각으로 교체,
+  앱에 클래스별 확률 바 오버레이 추가 (`scripts/diag_live_gap.py` 로 재현 가능).
+
+<details>
+<summary>이전 Keras 시절 기록</summary>
 
 ## 학습 결과 (2026-08-19, 2차 — 웹캠 실전 피드백 반영 재학습)
 
@@ -64,6 +101,8 @@ python -m venv .venv
   체크포인트 퇴행 방지 장치로 모델 파일은 1단계 최고 성능(val_loss 0.180) 버전 유지.
 - 잔여 혼동은 여전히 paper→scissors 방향 (계획서 예상 패턴).
 - 상세: `outputs/evaluation_report.txt`, `outputs/metrics.json`, `outputs/training_curves.png`
+
+</details>
 
 ## 남은 일 (사람 필요)
 

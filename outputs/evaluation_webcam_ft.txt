@@ -1,0 +1,54 @@
+
+===== webcam_val =====
+accuracy: 0.9338
+confusion matrix (rows=true ['rock', 'paper', 'scissors']):
+[[208   3   7]
+ [  7 204   9]
+ [ 16   1 195]]
+              precision    recall  f1-score   support
+
+        rock     0.9004    0.9541    0.9265       218
+       paper     0.9808    0.9273    0.9533       220
+    scissors     0.9242    0.9198    0.9220       212
+
+    accuracy                         0.9338       650
+   macro avg     0.9351    0.9337    0.9339       650
+weighted avg     0.9354    0.9338    0.9341       650
+
+
+===== test_original =====
+accuracy: 0.9179
+confusion matrix (rows=true ['rock', 'paper', 'scissors']):
+[[ 94  10   5]
+ [  0 107   0]
+ [  0  12 101]]
+              precision    recall  f1-score   support
+
+        rock     1.0000    0.8624    0.9261       109
+       paper     0.8295    1.0000    0.9068       107
+    scissors     0.9528    0.8938    0.9224       113
+
+    accuracy                         0.9179       329
+   macro avg     0.9274    0.9187    0.9184       329
+weighted avg     0.9283    0.9179    0.9185       329
+
+
+===== test_synthetic =====
+accuracy: 0.9301
+confusion matrix (rows=true ['rock', 'paper', 'scissors']):
+[[104   0   5]
+ [  5  91  11]
+ [  1   1 111]]
+              precision    recall  f1-score   support
+
+        rock     0.9455    0.9541    0.9498       109
+       paper     0.9891    0.8505    0.9146       107
+    scissors     0.8740    0.9823    0.9250       113
+
+    accuracy                         0.9301       329
+   macro avg     0.9362    0.9290    0.9298       329
+weighted avg     0.9351    0.9301    0.9298       329
+
+
+===== 요약 =====
+webcam_val: 0.9338 / test_original: 0.9179 / test_synthetic: 0.9301
