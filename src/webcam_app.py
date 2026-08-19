@@ -24,7 +24,9 @@ IMG_SIZE = 224
 SMOOTH_N = 7          # 스무딩 창 크기
 CONF_THRESHOLD = 0.75  # 이 미만이면 대기 상태
 COOLDOWN_SEC = 2.0     # 액션 트리거 후 재트리거 금지 시간
-ROI = (100, 100, 400, 400)  # (x1, y1, x2, y2) 고정 ROI 박스
+# 학습 데이터가 300×200(3:2)을 224×224로 왜곡 리사이즈하므로,
+# ROI도 3:2로 잡아 동일한 왜곡이 걸리게 한다 (정사각 ROI는 비율 불일치).
+ROI = (95, 120, 545, 420)  # (x1, y1, x2, y2) — 450×300, 3:2
 
 
 def on_action(gesture: str):
@@ -41,6 +43,14 @@ def main():
     import tensorflow as tf  # 로딩이 느려 함수 안에서 임포트
 
     model = tf.keras.models.load_model(MODEL_PATH)
+
+    # model.predict()는 호출당 오버헤드가 커서 실시간 루프에 부적합.
+    # tf.function 직접 호출로 컴파일해 프레임당 지연을 최소화한다.
+    infer = tf.function(
+        lambda x: model(x, training=False),
+        input_signature=[tf.TensorSpec([1, IMG_SIZE, IMG_SIZE, 3], tf.float32)],
+    )
+    infer(tf.zeros([1, IMG_SIZE, IMG_SIZE, 3]))  # 워밍업(트레이싱)
     print(f"모델 로드 완료: {MODEL_PATH}")
 
     cap = cv2.VideoCapture(0)
@@ -56,11 +66,13 @@ def main():
         if not ok:
             break
 
+        t0 = time.time()
         roi = frame[y1:y2, x1:x2]
         inp = cv2.cvtColor(roi, cv2.COLOR_BGR2RGB)
         inp = cv2.resize(inp, (IMG_SIZE, IMG_SIZE)).astype(np.float32) / 255.0
-        probs = model.predict(inp[None, ...], verbose=0)[0]
+        probs = infer(inp[None, ...]).numpy()[0]
         probs_hist.append(probs)
+        infer_ms = (time.time() - t0) * 1000
 
         avg = np.mean(probs_hist, axis=0)
         idx = int(avg.argmax())
@@ -80,6 +92,10 @@ def main():
         cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
         cv2.putText(frame, label, (x1, y1 - 12),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
+        cv2.putText(frame, f"{infer_ms:.0f} ms/frame", (x2 - 150, y1 - 12),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 1)
+        cv2.putText(frame, "fill the box with your hand", (x1, y2 + 52),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 1)
         cooldown_left = max(0.0, COOLDOWN_SEC - (now - last_trigger))
         if cooldown_left > 0:
             cv2.putText(frame, f"cooldown {cooldown_left:.1f}s", (x1, y2 + 28),

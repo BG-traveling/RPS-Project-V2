@@ -56,11 +56,14 @@ def make_ds(split_dir, shuffle=False):
 
 
 def build_model():
+    # 원본 데이터는 손이 전부 가로 방향 → 웹캠(손가락 위)과 방향 갭이 큼.
+    # RandomRotation(0.25)=±90° 로 방향 커버리지 확보, Translation 으로 위치 변화 대응.
     augment = keras.Sequential(
         [
             layers.RandomFlip("horizontal"),
-            layers.RandomRotation(0.1),
-            layers.RandomZoom(0.1),
+            layers.RandomRotation(0.25),
+            layers.RandomZoom(0.15),
+            layers.RandomTranslation(0.1, 0.1),
             layers.RandomBrightness(0.2, value_range=(0, 1)),
             layers.RandomContrast(0.2),
         ],
@@ -169,9 +172,38 @@ def main():
         ),
     ]
     history = model.fit(train_ds, validation_data=val_ds, epochs=10, callbacks=callbacks)
-    plot_history(history.history)
 
-    # 평가 (§6-4)
+    # 2단계 fine-tuning (§6-3): 상위 블록 unfreeze, lr=1e-5.
+    # 가위/보 혼동 완화 목적 — 저수준 특징은 유지하고 상위 표현만 미세 조정.
+    base = next(l for l in model.layers if l.name.startswith("mobilenetv2"))
+    base.trainable = True
+    fine_tune_from = len(base.layers) - 40  # 상위 약 2개 블록
+    for layer in base.layers[:fine_tune_from]:
+        layer.trainable = False
+    model.compile(
+        optimizer=keras.optimizers.Adam(1e-5),
+        loss="sparse_categorical_crossentropy",
+        metrics=["accuracy"],
+    )
+    ft_callbacks = [
+        keras.callbacks.EarlyStopping(
+            monitor="val_loss", patience=3, restore_best_weights=True
+        ),
+        keras.callbacks.ModelCheckpoint(
+            str(MODEL_PATH), monitor="val_loss", save_best_only=True,
+            # 1단계 최고 기록보다 나빠지면 저장하지 않음 (모델 파일 퇴행 방지)
+            initial_value_threshold=min(history.history["val_loss"]),
+        ),
+    ]
+    history_ft = model.fit(train_ds, validation_data=val_ds, epochs=8, callbacks=ft_callbacks)
+
+    merged = {
+        k: history.history[k] + history_ft.history[k] for k in history.history
+    }
+    plot_history(merged)
+
+    # 평가 (§6-4) — 디스크에 저장된 전체 최고 성능 모델 기준
+    model = keras.models.load_model(MODEL_PATH)
     report_lines = []
     acc_orig, cm_orig = evaluate_set(model, "test_original", SYN / "test_original", report_lines)
     acc_syn, cm_syn = evaluate_set(model, "test_synthetic", SYN / "test_synthetic", report_lines)
