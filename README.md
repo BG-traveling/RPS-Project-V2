@@ -48,22 +48,22 @@ python -m venv .venv
 - **test 이중 평가**: test_original(초록 배경) vs test_synthetic(실사 배경) 정확도를 비교해
   배경 증강 효과를 정량 확인.
 
-## 학습 결과 (2026-08-19, head-only 10 epoch, CPU)
+## 학습 결과 (2026-08-19, 2차 — 웹캠 실전 피드백 반영 재학습)
 
-| 지표 | 값 |
-|---|---|
-| val accuracy | **0.951** |
-| test_synthetic (실사 배경) | **0.936** |
-| test_original (초록 배경) | 0.839 |
+| 지표 | 1차 (±36° 증강) | 2차 (±90° 증강 + 이동) |
+|---|---|---|
+| test_original (초록 배경) | 0.839 | **0.924** |
+| test_synthetic (실사 배경) | 0.936 | 0.918 |
 
-- 학습 곡선: 과적합 없음 (val ≥ train, val_loss ≈ 0.11) → `outputs/training_curves.png`
-- test_synthetic 혼동: paper→scissors 10건이 최다 — 계획서에서 예상한 가위/보 혼동 패턴.
-  → `outputs/confusion_test_synthetic.png`
-- test_original(초록 배경)이 더 낮은 이유: train이 전부 합성 배경이라 초록 단색 배경이
-  오히려 분포 밖(OOD)이 됨. rock/paper가 scissors로 쏠리는 오류(25+28건).
-  실전 목표는 일반 배경이므로 test_synthetic 수치가 실전에 더 가까운 지표.
-  초록 배경 성능도 필요하면 train에 원본 일부를 섞는 것으로 개선 가능.
-- 상세 리포트: `outputs/evaluation_report.txt`, `outputs/metrics.json`
+- 1차 모델은 웹캠 실전에서 보자기→가위 오인식이 심했음. 원인: 학습 이미지는 손이
+  전부 가로 방향인데 웹캠은 손가락이 위를 향함(방향 갭) + 정사각 ROI의 비율 불일치.
+- 2차: 회전 증강 ±90° + RandomTranslation 추가로 방향/위치 강건성 확보.
+  test 수치가 소폭 내려간 것은 증강이 세져 과제가 어려워진 영향이며, test 셋 자체가
+  가로 손 이미지뿐이라 방향 강건성 개선은 test 수치에 반영되지 않음 — 실전 웹캠이 진짜 지표.
+- 상위 블록 unfreeze fine-tuning(lr=1e-5)은 val_loss 발산으로 조기종료 —
+  체크포인트 퇴행 방지 장치로 모델 파일은 1단계 최고 성능(val_loss 0.180) 버전 유지.
+- 잔여 혼동은 여전히 paper→scissors 방향 (계획서 예상 패턴).
+- 상세: `outputs/evaluation_report.txt`, `outputs/metrics.json`, `outputs/training_curves.png`
 
 ## 남은 일 (사람 필요)
 
