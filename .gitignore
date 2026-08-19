@@ -1,0 +1,17 @@
+# 환경/비밀
+.env
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# 대용량 산출물
+models/*.keras
+data_synthetic/
+Data/
+backgrounds/
+outputs/
