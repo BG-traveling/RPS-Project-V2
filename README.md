@@ -31,6 +31,7 @@ src/
 models/rps_mobilenetv2.pt       학습된 모델 (학습↔추론은 이 파일로만 연결)
 models/hand_landmarker.task     MediaPipe 손 검출 사전학습 모델
 outputs/                        EDA/합성/학습 그래프, confusion matrix, 평가 리포트
+old/                            더 이상 코드에서 참조하지 않는 파일 보관 (Keras 모델 등)
 ```
 
 ## 실행 방법
