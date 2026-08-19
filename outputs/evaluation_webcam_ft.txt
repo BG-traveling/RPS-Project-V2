@@ -1,54 +1,54 @@
 
 ===== webcam_val =====
-accuracy: 0.9338
+accuracy: 0.9445
 confusion matrix (rows=true ['rock', 'paper', 'scissors']):
-[[208   3   7]
- [  7 204   9]
- [ 16   1 195]]
+[[304   0   4]
+ [  5 298   6]
+ [ 11  25 266]]
               precision    recall  f1-score   support
 
-        rock     0.9004    0.9541    0.9265       218
-       paper     0.9808    0.9273    0.9533       220
-    scissors     0.9242    0.9198    0.9220       212
+        rock     0.9500    0.9870    0.9682       308
+       paper     0.9226    0.9644    0.9430       309
+    scissors     0.9638    0.8808    0.9204       302
 
-    accuracy                         0.9338       650
-   macro avg     0.9351    0.9337    0.9339       650
-weighted avg     0.9354    0.9338    0.9341       650
+    accuracy                         0.9445       919
+   macro avg     0.9455    0.9441    0.9439       919
+weighted avg     0.9453    0.9445    0.9440       919
 
 
 ===== test_original =====
-accuracy: 0.9179
+accuracy: 0.9605
 confusion matrix (rows=true ['rock', 'paper', 'scissors']):
-[[ 94  10   5]
+[[106   3   0]
  [  0 107   0]
- [  0  12 101]]
+ [  0  10 103]]
               precision    recall  f1-score   support
 
-        rock     1.0000    0.8624    0.9261       109
-       paper     0.8295    1.0000    0.9068       107
-    scissors     0.9528    0.8938    0.9224       113
+        rock     1.0000    0.9725    0.9860       109
+       paper     0.8917    1.0000    0.9427       107
+    scissors     1.0000    0.9115    0.9537       113
 
-    accuracy                         0.9179       329
-   macro avg     0.9274    0.9187    0.9184       329
-weighted avg     0.9283    0.9179    0.9185       329
+    accuracy                         0.9605       329
+   macro avg     0.9639    0.9613    0.9608       329
+weighted avg     0.9648    0.9605    0.9609       329
 
 
 ===== test_synthetic =====
-accuracy: 0.9301
+accuracy: 0.9696
 confusion matrix (rows=true ['rock', 'paper', 'scissors']):
-[[104   0   5]
- [  5  91  11]
+[[106   1   2]
+ [  1 102   4]
  [  1   1 111]]
               precision    recall  f1-score   support
 
-        rock     0.9455    0.9541    0.9498       109
-       paper     0.9891    0.8505    0.9146       107
-    scissors     0.8740    0.9823    0.9250       113
+        rock     0.9815    0.9725    0.9770       109
+       paper     0.9808    0.9533    0.9668       107
+    scissors     0.9487    0.9823    0.9652       113
 
-    accuracy                         0.9301       329
-   macro avg     0.9362    0.9290    0.9298       329
-weighted avg     0.9351    0.9301    0.9298       329
+    accuracy                         0.9696       329
+   macro avg     0.9703    0.9693    0.9697       329
+weighted avg     0.9700    0.9696    0.9696       329
 
 
 ===== 요약 =====
-webcam_val: 0.9338 / test_original: 0.9179 / test_synthetic: 0.9301
+webcam_val: 0.9445 / test_original: 0.9605 / test_synthetic: 0.9696

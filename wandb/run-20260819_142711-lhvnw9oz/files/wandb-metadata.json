@@ -1,0 +1,40 @@
+{
+  "os":  "Windows-11-10.0.26200-SP0",
+  "python":  "CPython 3.13.3",
+  "startedAt":  "2026-08-19T05:27:11.108994Z",
+  "program":  "C:\\kdh\\개인\\rps-project-sample\\scripts\\05_finetune_webcam.py",
+  "codePath":  "scripts\\05_finetune_webcam.py",
+  "codePathLocal":  "scripts\\05_finetune_webcam.py",
+  "git":  {
+    "remote":  "https://github.com/BG-traveling/RPS-Project-V2.git",
+    "commit":  "2a68b26c7f5266c622c0342d684bac226ee98166"
+  },
+  "email":  "onthegroundplay403@gmail.com",
+  "root":  "C:\\kdh\\개인\\rps-project-sample",
+  "host":  "c1-16",
+  "executable":  "C:\\kdh\\개인\\rps-project-sample\\.venv\\Scripts\\python.exe",
+  "cpu_count":  8,
+  "cpu_count_logical":  8,
+  "gpu":  "NVIDIA GeForce GTX 1650",
+  "gpu_count":  1,
+  "disk":  {
+    "/":  {
+      "total":  "511174778880",
+      "used":  "264268992512"
+    }
+  },
+  "memory":  {
+    "total":  "17134051328"
+  },
+  "gpu_nvidia":  [
+    {
+      "name":  "NVIDIA GeForce GTX 1650",
+      "memoryTotal":  "4294967296",
+      "cudaCores":  896,
+      "architecture":  "Turing",
+      "uuid":  "GPU-546735eb-9571-4c25-8be6-783476f9306a"
+    }
+  ],
+  "cudaVersion":  "13.3",
+  "writerId":  "9a0ma17tjmxdqkq7dn9xybzj9kirjln0"
+}

@@ -1,0 +1,27 @@
+2026-08-19 14:27:11,112 INFO    MainThread:20676 [wandb_setup.py:_flush():81] Current SDK version is 0.28.2
+2026-08-19 14:27:11,112 INFO    MainThread:20676 [wandb_setup.py:_flush():81] Configure stats pid to 20676
+2026-08-19 14:27:11,112 INFO    MainThread:20676 [wandb_setup.py:_flush():81] Loading settings from environment variables
+2026-08-19 14:27:11,112 INFO    MainThread:20676 [wandb_init.py:setup_run_log_directory():739] Logging user logs to C:\kdh\개인\rps-project-sample\wandb\run-20260819_142711-lhvnw9oz\logs\debug.log
+2026-08-19 14:27:11,112 INFO    MainThread:20676 [wandb_init.py:setup_run_log_directory():740] Logging internal logs to C:\kdh\개인\rps-project-sample\wandb\run-20260819_142711-lhvnw9oz\logs\debug-internal.log
+2026-08-19 14:27:11,118 INFO    MainThread:20676 [wandb_init.py:init():783] calling init triggers
+2026-08-19 14:27:11,118 INFO    MainThread:20676 [wandb_init.py:init():788] wandb.init called with sweep_config: {}
+config: {'stage': '05_webcam_finetune', 'webcam_repeat': 5, 'unfreeze_blocks': 3, 'bn': 'frozen (params + running stats)', 'lr': 5e-05, 'epochs': 15, 'patience': 4, 'webcam_split': 'temporal 70/30 (leak-safe)', '_wandb': {}}
+2026-08-19 14:27:11,118 INFO    MainThread:20676 [wandb_init.py:init():831] starting backend
+2026-08-19 14:27:11,119 INFO    MainThread:20676 [wandb_init.py:init():846] sending inform_init request
+2026-08-19 14:27:11,290 INFO    MainThread:20676 [wandb_init.py:init():851] backend started and connected
+2026-08-19 14:27:11,317 INFO    MainThread:20676 [wandb_init.py:init():921] updated telemetry
+2026-08-19 14:27:11,666 INFO    MainThread:20676 [wandb_init.py:init():944] communicating run to backend with 90.0 second timeout
+2026-08-19 14:27:12,600 INFO    MainThread:20676 [wandb_init.py:init():981] starting run threads in backend
+2026-08-19 14:27:12,777 INFO    MainThread:20676 [wandb_run.py:_console_start():2626] atexit reg
+2026-08-19 14:27:12,777 INFO    MainThread:20676 [wandb_run.py:_redirect():2476] redirect: wrap_raw
+2026-08-19 14:27:12,777 INFO    MainThread:20676 [wandb_run.py:_redirect():2545] Wrapping output streams.
+2026-08-19 14:27:12,778 INFO    MainThread:20676 [wandb_run.py:_redirect():2568] Redirects installed.
+2026-08-19 14:27:12,782 INFO    MainThread:20676 [wandb_init.py:init():1019] run started, returning control to user process
+2026-08-19 14:36:52,335 INFO    MainThread:20676 [wandb_run.py:_config_callback():1360] config_cb ('_wandb', 'visualize', 'webcam_val/confusion_matrix') {'panel_type': 'Vega2', 'panel_config': {'panelDefId': 'wandb/confusion_matrix/v1', 'fieldSettings': {'Actual': 'Actual', 'Predicted': 'Predicted', 'nPredictions': 'nPredictions'}, 'stringSettings': {'title': 'Confusion Matrix Curve'}, 'transform': {'name': 'tableWithLeafColNames'}, 'userQuery': {'queryFields': [{'name': 'runSets', 'args': [{'name': 'runSets', 'value': '${runSets}'}], 'fields': [{'name': 'id', 'fields': []}, {'name': 'name', 'fields': []}, {'name': '_defaultColorIndex', 'fields': []}, {'name': 'summaryTable', 'args': [{'name': 'tableKey', 'value': 'webcam_val/confusion_matrix_table'}], 'fields': []}]}]}}} None
+2026-08-19 14:37:03,380 INFO    MainThread:20676 [wandb_run.py:_config_callback():1360] config_cb ('_wandb', 'visualize', 'test_original/confusion_matrix') {'panel_type': 'Vega2', 'panel_config': {'panelDefId': 'wandb/confusion_matrix/v1', 'fieldSettings': {'Actual': 'Actual', 'Predicted': 'Predicted', 'nPredictions': 'nPredictions'}, 'stringSettings': {'title': 'Confusion Matrix Curve'}, 'transform': {'name': 'tableWithLeafColNames'}, 'userQuery': {'queryFields': [{'name': 'runSets', 'args': [{'name': 'runSets', 'value': '${runSets}'}], 'fields': [{'name': 'id', 'fields': []}, {'name': 'name', 'fields': []}, {'name': '_defaultColorIndex', 'fields': []}, {'name': 'summaryTable', 'args': [{'name': 'tableKey', 'value': 'test_original/confusion_matrix_table'}], 'fields': []}]}]}}} None
+2026-08-19 14:37:14,071 INFO    MainThread:20676 [wandb_run.py:_config_callback():1360] config_cb ('_wandb', 'visualize', 'test_synthetic/confusion_matrix') {'panel_type': 'Vega2', 'panel_config': {'panelDefId': 'wandb/confusion_matrix/v1', 'fieldSettings': {'Actual': 'Actual', 'Predicted': 'Predicted', 'nPredictions': 'nPredictions'}, 'stringSettings': {'title': 'Confusion Matrix Curve'}, 'transform': {'name': 'tableWithLeafColNames'}, 'userQuery': {'queryFields': [{'name': 'runSets', 'args': [{'name': 'runSets', 'value': '${runSets}'}], 'fields': [{'name': 'id', 'fields': []}, {'name': 'name', 'fields': []}, {'name': '_defaultColorIndex', 'fields': []}, {'name': 'summaryTable', 'args': [{'name': 'tableKey', 'value': 'test_synthetic/confusion_matrix_table'}], 'fields': []}]}]}}} None
+2026-08-19 14:37:15,198 INFO    MainThread:20676 [wandb_run.py:_finish():2397] finishing run onthegroundplay403-sesac/rps-project/lhvnw9oz
+2026-08-19 14:37:15,198 INFO    MainThread:20676 [wandb_run.py:_atexit_cleanup():2593] got exitcode: 0
+2026-08-19 14:37:15,199 INFO    MainThread:20676 [wandb_run.py:_restore():2575] restore
+2026-08-19 14:37:15,199 INFO    MainThread:20676 [wandb_run.py:_restore():2581] restore done
+2026-08-19 14:37:17,590 INFO    MainThread:20676 [wandb_run.py:_footer_sync_info():4025] logging synced files
